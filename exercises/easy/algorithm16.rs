@@ -11,10 +11,18 @@
 
 use std::fmt::{self, Display, Formatter};
 
-pub fn rotate_matrix_90_degrees(matrix: &mut Vec<Vec<i32>>) {
-    // TODO: Implement the logic to rotate the matrix 90 degrees in place
-}
+fn rotate_matrix_90_degrees(matrix: &mut Vec<Vec<i32>>) {
+    let rows = matrix.len();
+    let cols = matrix[0].len();
+    let mut rotated_matrix = vec![vec![0; rows]; cols];
 
+    for i in 0..cols {
+        for j in 0..rows {
+            rotated_matrix[i][j] = matrix[rows - 1 - j][i];
+        }
+    }
+    *matrix = rotated_matrix;
+}
 #[cfg(test)]
 mod tests {
     use super::*;

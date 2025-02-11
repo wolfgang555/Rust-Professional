@@ -12,8 +12,20 @@
 use std::fmt::{self, Display, Formatter};
 
 pub fn fib(n: i32) -> i32 {
-    // TODO: Implement the logic to calculate the nth Fibonacci number using matrix exponentiation
-    0 // Placeholder return value
+    if n == 0 {
+        return 0;
+    }
+    // using hashmap to store the fibonacci sequence
+    let mut fib_map = std::collections::HashMap::new();
+    fib_map.insert(0, 0);
+    fib_map.insert(1, 1);
+
+    for i in 2..=n {
+        let next_fib = fib_map.get(&(i - 1)).unwrap() + fib_map.get(&(i - 2)).unwrap();
+        fib_map.insert(i, next_fib);
+    }
+
+    *fib_map.get(&n).unwrap()
 }
 
 #[cfg(test)]

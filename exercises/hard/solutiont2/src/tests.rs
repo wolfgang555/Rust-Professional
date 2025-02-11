@@ -27,11 +27,14 @@ mod tests {
         for (input, expected) in TEST_CASES {
             let start = Instant::now();
             let result = find_max_prime_factor(*input);
+            println!("Result: {}, expected: {}", result, *expected);
             let duration = start.elapsed();
 
             // 时间超3s，判定不合格
             if duration <= Duration::new(3, 0) && result == *expected {
                 total_score += 10.0;
+            } else {
+                println!("Result {} Time limit exceeded", result);
             }
         }
         println!("Total score: {:.2}", total_score);
