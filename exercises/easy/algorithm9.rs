@@ -1,11 +1,6 @@
-/*
-	heap
-	This question requires you to implement a binary heap function
-*/
-
-
 use std::cmp::Ord;
 use std::default::Default;
+use std::mem;
 
 pub struct Heap<T>
 where
@@ -37,7 +32,30 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        // Increment count and push the new value
+        self.count += 1;
+
+        // If the items vector is too small, extend it
+        if self.count >= self.items.len() {
+            self.items.push(value);
+        } else {
+            self.items[self.count] = value;
+        }
+
+        // Perform sift up (bubble up) operation
+        let mut current_idx = self.count;
+        while current_idx > 1 {
+            let parent_idx = self.parent_idx(current_idx);
+
+            // Compare using the custom comparator
+            if (self.comparator)(&self.items[current_idx], &self.items[parent_idx]) {
+                // Swap if the current item should be higher in the heap
+                self.items.swap(current_idx, parent_idx);
+                current_idx = parent_idx;
+            } else {
+                break;
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -57,8 +75,20 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        let left_idx = self.left_child_idx(idx);
+        let right_idx = self.right_child_idx(idx);
+
+        // If no right child, return left child
+        if right_idx > self.count {
+            return left_idx;
+        }
+
+        // Use the comparator to determine which child is "smaller"
+        if (self.comparator)(&self.items[left_idx], &self.items[right_idx]) {
+            left_idx
+        } else {
+            right_idx
+        }
     }
 }
 
@@ -84,8 +114,34 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        // If the heap is empty, return None
+        if self.is_empty() {
+            return None;
+        }
+
+        // Take the top item (first valid index)
+        let result = mem::take(&mut self.items[1]);
+
+        // Replace the top item with the last item
+        self.items[1] = mem::take(&mut self.items[self.count]);
+        self.count -= 1;
+
+        // Perform sift down (bubble down) operation
+        let mut current_idx = 1;
+        while self.children_present(current_idx) {
+            let child_idx = self.smallest_child_idx(current_idx);
+
+            // Compare using the custom comparator
+            if (self.comparator)(&self.items[child_idx], &self.items[current_idx]) {
+                // Swap if the child should be higher in the heap
+                self.items.swap(current_idx, child_idx);
+                current_idx = child_idx;
+            } else {
+                break;
+            }
+        }
+
+        Some(result)
     }
 }
 

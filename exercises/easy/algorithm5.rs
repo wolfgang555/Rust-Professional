@@ -5,6 +5,7 @@
 
 
 use std::collections::VecDeque;
+use log::warn;
 
 // Define a graph
 struct Graph {
@@ -27,10 +28,21 @@ impl Graph {
 
     // Perform a breadth-first search on the graph, return the order of visited nodes
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
-        
-		//TODO
-
+        let mut queue = VecDeque::new();
+        queue.push_back(start);
         let mut visit_order = vec![];
+        visit_order.push(start);
+
+        while !queue.is_empty() {
+            let current = queue.pop_front().unwrap();
+            for &neighbor in &self.adj[current] {
+                if !visit_order.contains(&neighbor) {
+                    visit_order.push(neighbor);
+                    queue.push_back(neighbor);
+                }
+            }
+        }
+
         visit_order
     }
 }

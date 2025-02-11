@@ -73,7 +73,21 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn reverse(&mut self){
-		// TODO
+        let mut current = self.start;
+
+        // Swap the start and end pointers
+        std::mem::swap(&mut self.start, &mut self.end);
+
+        // Traverse the list and swap the `next` and `prev` pointers of each node
+        while let Some(mut node_ptr) = current {
+            unsafe {
+                let node = node_ptr.as_mut();
+                // Swap `next` and `prev` pointers
+                std::mem::swap(&mut node.next, &mut node.prev);
+                // Move to the next node (which is now the previous node due to the swap)
+                current = node.prev; // Now we follow the previous pointer instead of next
+            }
+        }
 	}
 }
 

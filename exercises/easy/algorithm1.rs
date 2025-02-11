@@ -69,15 +69,38 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self where T: PartialOrd + Copy {
+        let mut list_c = LinkedList::<T>::new();
+        let mut node_a = list_a.start;
+        let mut node_b = list_b.start;
+
+        while let (Some(a), Some(b)) = (node_a, node_b) {
+            let val_a = unsafe { a.as_ref().val };
+            let val_b = unsafe { b.as_ref().val };
+
+            if val_a < val_b {
+                list_c.add(val_a);
+                node_a = unsafe { a.as_ref().next };
+            } else {
+                list_c.add(val_b);
+                node_b = unsafe { b.as_ref().next };
+            }
         }
-	}
+
+        while let Some(a) = node_a {
+            let val_a = unsafe { a.as_ref().val };
+            list_c.add(val_a);
+            node_a = unsafe { a.as_ref().next };
+        }
+
+        while let Some(b) = node_b {
+            let val_b = unsafe { b.as_ref().val };
+            list_c.add(val_b);
+            node_b = unsafe { b.as_ref().next };
+        }
+
+        list_c
+    }
 }
 
 impl<T> Display for LinkedList<T>
@@ -135,7 +158,7 @@ mod tests {
 		let vec_a = vec![1,3,5,7];
 		let vec_b = vec![2,4,6,8];
 		let target_vec = vec![1,2,3,4,5,6,7,8];
-		
+
 		for i in 0..vec_a.len(){
 			list_a.add(vec_a[i]);
 		}
