@@ -132,8 +132,8 @@
     },
     {
       "name": "solutiont2",
-      "result": false,
-      "score": 0
+      "result": true,
+      "score": 10
     },
     {
       "name": "solutiont3",
@@ -153,9 +153,9 @@
   ],
   "statistics": {
     "total_exercises": 30,
-    "total_successes": 26,
-    "total_failures": 4,
-    "total_score": 60,
-    "total_time": 25
+    "total_successes": 27,
+    "total_failures": 3,
+    "total_score": 70,
+    "total_time": 23
   }
 }
